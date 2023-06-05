@@ -1,5 +1,5 @@
-import Log from "sublymus_logger";
 import { ContextSchema } from "./Context";
+import { ModelInstanceSchema } from "./Initialize";
 
 export function accessValidator(option: {
   ctx: ContextSchema,
@@ -15,12 +15,13 @@ export function accessValidator(option: {
     | "default"
     | undefined,
     share?: {
-      add?: string[],
-      ony?: string[],
+      only?: string[],
       exc?: string[],
     },
-  }
+  },
+  modelPath?:string,
   property?: string,
+  instance?:ModelInstanceSchema
 }) {
   let { ctx, type, isOwner, property , rule } = option;
   let {access , share } = rule;
@@ -99,13 +100,10 @@ export function accessValidator(option: {
 
   if (clientPermission == "client") {
     if (share) {
-      if (Array.isArray(share.ony) && share.ony.includes(ctx.__permission)) {
+      if (Array.isArray(share.only) && share.only.includes(ctx.__permission)) {
         clientPermission = isOwner?'owner':'shared';
       }
-      if (Array.isArray(share.add) && [ctx.__permission, ...share.add].includes(ctx.__permission)) {
-        clientPermission = isOwner?'owner':'shared';
-      }
-      if (Array.isArray(share.exc) && !share.exc.includes(ctx.__permission)) {
+       if (Array.isArray(share.exc) && !share.exc.includes(ctx.__permission)) {
         clientPermission = isOwner?'owner':'shared';
       }
     }else{
