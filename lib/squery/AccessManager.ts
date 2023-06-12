@@ -17,7 +17,7 @@ export function accessValidator(option: {
     share?: {
       only?: string[],
       exc?: string[],
-    },
+    }|string,
   },
   modelPath?:string,
   property?: string,
@@ -99,7 +99,7 @@ export function accessValidator(option: {
   let clientPermission = ctx.__permission?.startsWith("client:") ? "client" : (ctx.__permission || 'any');
 
   if (clientPermission == "client") {
-    if (share) {
+    if (share && typeof share !== 'string') {
       if (Array.isArray(share.only) && share.only.includes(ctx.__permission)) {
         clientPermission = isOwner?'owner':'shared';
       }

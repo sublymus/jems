@@ -16,7 +16,13 @@ const TransactionSchema = SQuery.Schema({
     access: "admin",
   },
   //full
-  country: {
+  countryEnd: {
+    type: Schema.Types.ObjectId,
+    ref: CountryModel.modelName,
+    strictAlien: true,
+    impact: false,
+  },
+  countrySatrt: {
     type: Schema.Types.ObjectId,
     ref: CountryModel.modelName,
     strictAlien: true,

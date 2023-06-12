@@ -33,7 +33,6 @@ export const createFactory = (
     ctx.ctrlName = "" + option.modelPath;
     if (!more) more = {};
     if (!more.savedlist) more.savedlist = [];
-    if (!more.signupId) more.signupId = ctx.signup?.id;
     if (!more.__parentModel) more.__parentModel = "";
     more.modelPath = option.modelPath;
 
@@ -63,7 +62,7 @@ export const createFactory = (
     const preRes = await callPre({
       ctx,
       more,
-    });
+    }); 
     if(preRes) return preRes
 
     const accu:MoreSchema = {};
@@ -372,12 +371,12 @@ export const createFactory = (
             });
             if (!res?.response) {
               await backDestroy(ctx, more);
-              //Log('log', { res })
+              Log('logA', { res })
               return await callPost({
                 ctx,
                 more,
                 res:{
-                  error:'',
+                  error:'NOT_CREATED',
                   ...await STATUS.NOT_CREATED(ctx),
                 },
               });
@@ -402,6 +401,7 @@ export const createFactory = (
             );
           } catch (error:any) {
             await backDestroy(ctx, more);
+            Log('logB', '_____')
             return await callPost({
               ctx,
               more,
@@ -449,6 +449,7 @@ export const createFactory = (
       //Log('error', error);
       await backDestroy(ctx, more);
       more.modelInstance = modelInstance;
+      Log('logC', '_____')
       return await callPost({
         ctx,
         more,

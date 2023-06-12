@@ -6,7 +6,7 @@ import path from "path";
 import Log from "sublymus_logger";
 import { SQuery } from "./lib/squery/SQuery";
 
-const PORT = 3000;
+const PORT = 3001;
 
 const app = express();
 const server = app.listen(PORT, () => {

@@ -86,16 +86,7 @@ export class AuthManager {
       __signupId: loginModelInstance.__signupId.toString(),
     };
 
-    Log("AVANT_LE_cookies", {
-      modelPath: token.__loginModelPath,
-      id: token.__loginId,
-    });
     await SQuery.cookies(socket, "token", token);
-
-    Log("APLE_cookies", {
-      modelPath: token.__loginModelPath,
-      id: token.__loginId,
-    });
 
     return {
       response: {
