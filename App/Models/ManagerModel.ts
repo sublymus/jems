@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { SQueryMongooseSchema } from "../../lib/squery/Initialize";
+import { ModelControllers, SQueryMongooseSchema } from "../../lib/squery/Initialize";
 import { MakeModelCtlForm } from "../../lib/squery/ModelCtrlManager";
 import { SQuery } from "../../lib/squery/SQuery";
 import UserModel from "./UserModel";
@@ -10,36 +10,44 @@ import { access } from "fs";
 
 const managerSchema = SQuery.Schema({
   ...(UserModel.schema as any).description,
-  entreprise:{
-    type:Schema.Types.ObjectId,
-    ref:'entreprise',
-    access:'admin'
+  canCreate: {
+    type: Boolean,
+    access: 'admin',
   },
-  currentDiscussions:[{
-    type:Schema.Types.ObjectId,
-    ref:DiscussionModel.modelName,
-    strictAlien:true,
-    impact:false,
-    access:'admin'
-  }],
-  lastDiscussions:[{
-    type:Schema.Types.ObjectId,
-    ref:DiscussionModel.modelName,
-    strictAlien:true,
-    impact:false,
-    access:'admin'
-  }],
-  managerTransactions : [{
+  canDelete: {
+    type: Boolean,
+    access: 'admin',
+  },
+  entreprise: {
     type: Schema.Types.ObjectId,
-    ref:TransactionModel.modelName,
-    access:'admin',
-    impact:false,
+    ref: 'entreprise',
+    access: 'admin'
+  },
+  currentDiscussions: [{
+    type: Schema.Types.ObjectId,
+    ref: DiscussionModel.modelName,
+    strictAlien: true,
+    impact: false,
+    access: 'admin'
+  }],
+  lastDiscussions: [{
+    type: Schema.Types.ObjectId,
+    ref: DiscussionModel.modelName,
+    strictAlien: true,
+    impact: false,
+    access: 'admin'
+  }],
+  managerTransactions: [{
+    type: Schema.Types.ObjectId,
+    ref: TransactionModel.modelName,
+    access: 'admin',
+    impact: false,
     strictAlien: true,
   }],
-  managerPreference:{
-    type:Schema.Types.ObjectId,
-    ref:ManagerPreferenceModel.modelName,
-    access:'admin'
+  managerPreference: {
+    type: Schema.Types.ObjectId,
+    ref: ManagerPreferenceModel.modelName,
+    access: 'admin'
   }
 });
 export const ManagerModel = mongoose.model("manager", managerSchema);
@@ -49,15 +57,28 @@ const maker = MakeModelCtlForm({
   schema: managerSchema,
 });
 
-maker.pre('store',async({ctx})=>{
-  if( ctx.__permission != 'client:manager'){
+maker.pre('store', async ({ ctx }) => {
+
+  const first = await ModelControllers["manager"]?.option?.model.findOne({
+    canCreate: true,
+    canDelete: true,
+  });
+  if (!first) {
+    ctx.data.canCreate = true;
+    ctx.data.canDelete = true;
+    return
+  };
+
+  if (first.__key.toString() != ctx.__key) {
     return {
-      error: 'Only manager can create account for another manager',
-      code:"Manager ACount Not Created",
-      message:'Only manager can create account for another manager',
-      status:404,
+      error: 'You don\'t have a perssion to create a manager',
+      code: "Manager Account Not Created",
+      message: 'You don\'t have a perssion to create a manager',
+      status: 404,
     }
   }
+  ctx.data.canCreate = false;
+  ctx.data.canDelete = false;
 });
 maker.tools.assigneToNewListElement({
   parentModelPath: 'entreprise',
