@@ -540,7 +540,7 @@ const Transaction: ControllerSchema = {
     const listTransaction : Array <any>= await ModelControllers["transaction"]?.option?.model.find(filter);
 
     for (const instance of listTransaction) {
-      formatModelInstance(ctx,'read','transaction',instance);
+      await  formatModelInstance(ctx,'read','transaction',instance);
     }
 
     return {
