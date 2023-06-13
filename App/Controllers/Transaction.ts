@@ -7,6 +7,7 @@ import {
   ModelControllers,
   ResponseSchema,
 } from "../../lib/squery/Initialize";
+import { formatModelInstance } from "../../lib/squery/ModelCtrlManager";
 
 const Transaction: ControllerSchema = {
   start: async (ctx: ContextSchema): ResponseSchema => {
@@ -524,16 +525,23 @@ const Transaction: ControllerSchema = {
     }
   },
   list: async (ctx: ContextSchema): ResponseSchema => {
-    const {filter} = ctx.data;
+
+    try {
+      const {filter} = ctx.data;
+
     if (ctx.signup.modelPath != "manager") {
       return {
-        error: "Only manager can create user this service",
-        code: "Only manager can create user this service",
-        message: "Only manager can create user this service",
+        error: "Only manager can user this service",
+        code: "Only manager can user this service",
+        message: "Only manager can user this service",
         status: 404,
       };
     }
-    const listTransaction = await ModelControllers["transaction"]?.option?.model.find(filter);
+    const listTransaction : Array <any>= await ModelControllers["transaction"]?.option?.model.find(filter);
+
+    for (const instance of listTransaction) {
+      formatModelInstance(ctx,'read','transaction',instance);
+    }
 
     return {
       response: listTransaction,
@@ -541,6 +549,14 @@ const Transaction: ControllerSchema = {
       message: "OPERATION_SUCCESS",
       status: 200,
     };
+    } catch (error:any) {
+      return {
+        error: "SERVER_ERROR",
+        code: "SERVER_ERROR",
+        message: error.message,
+        status: 502,
+      };
+    }
     
   },
 };

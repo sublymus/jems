@@ -174,7 +174,7 @@ const MakeModelCtlForm: (
 async function formatModelInstance(
   ctx: ContextSchema,
   service: ModelServiceAvailable,
-  option: ModelFrom_optionSchema & { modelPath: string },
+  modelPath: string,
   modelInstance: ModelInstanceSchema
 ) {
   const info: PopulateSchema = {
@@ -184,7 +184,7 @@ async function formatModelInstance(
   deepPopulate(
     ctx,
     service,
-    option.model.modelName,
+    modelPath,
     info,
     modelInstance.__key._id.toString() == ctx.__key
   );

@@ -22,6 +22,7 @@ const EntrepriseSchema = SQuery.Schema({
       ref: ManagerModel.modelName,
     },
   ],
+
   users: [
     {
       type: Schema.Types.ObjectId,
@@ -32,7 +33,6 @@ const EntrepriseSchema = SQuery.Schema({
     type: Map,
     //@ts-ignore
     of: Number,
-    access:'default',
   },
   serviceCharge: {
     type: Number,
@@ -40,7 +40,7 @@ const EntrepriseSchema = SQuery.Schema({
   countries: [
     {
       type: Schema.Types.ObjectId,
-      ref: CountryModel.modelName, 
+      ref: CountryModel.modelName,
     },
   ],
 });
@@ -52,14 +52,14 @@ const maker = MakeModelCtlForm({
   schema: EntrepriseSchema,
   volatile: true,
 }).pre("create", async () => {
-  // const etp = await ModelControllers["entreprise"].option?.model.findOne();
-  // if (etp) {
-  //   return {
-  //     response: etp._id.toString(),
-  //     code: "OPERATION_SUCCESS",
-  //     message: "OPERATION_SUCCESS",
-  //     status: 404,
-  //   };
-  // }
+  const etp = await ModelControllers["entreprise"].option?.model.findOne();
+  if (etp) {
+    return {
+      response: etp._id.toString(),
+      code: "OPERATION_SUCCESS",
+      message: "OPERATION_SUCCESS",
+      status: 404,
+    };
+  }
 });
 export default EntrepriseModel;

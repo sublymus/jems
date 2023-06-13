@@ -10,44 +10,36 @@ import { access } from "fs";
 
 const managerSchema = SQuery.Schema({
   ...(UserModel.schema as any).description,
-  canCreate: {
-    type: Boolean,
-    access: 'admin',
+  entreprise:{
+    type:Schema.Types.ObjectId,
+    ref:'entreprise',
+    access:'admin'
   },
-  canDelete: {
-    type: Boolean,
-    access: 'admin',
-  },
-  entreprise: {
-    type: Schema.Types.ObjectId,
-    ref: 'entreprise',
-    access: 'admin'
-  },
-  currentDiscussions: [{
-    type: Schema.Types.ObjectId,
-    ref: DiscussionModel.modelName,
-    strictAlien: true,
-    impact: false,
-    access: 'admin'
+  currentDiscussions:[{
+    type:Schema.Types.ObjectId,
+    ref:DiscussionModel.modelName,
+    strictAlien:true,
+    impact:false,
+    access:'admin'
   }],
-  lastDiscussions: [{
-    type: Schema.Types.ObjectId,
-    ref: DiscussionModel.modelName,
-    strictAlien: true,
-    impact: false,
-    access: 'admin'
+  lastDiscussions:[{
+    type:Schema.Types.ObjectId,
+    ref:DiscussionModel.modelName,
+    strictAlien:true,
+    impact:false,
+    access:'admin'
   }],
-  managerTransactions: [{
+  managerTransactions : [{
     type: Schema.Types.ObjectId,
-    ref: TransactionModel.modelName,
-    access: 'admin',
-    impact: false,
+    ref:TransactionModel.modelName,
+    access:'admin',
+    impact:false,
     strictAlien: true,
   }],
-  managerPreference: {
-    type: Schema.Types.ObjectId,
-    ref: ManagerPreferenceModel.modelName,
-    access: 'admin'
+  managerPreference:{
+    type:Schema.Types.ObjectId,
+    ref:ManagerPreferenceModel.modelName,
+    access:'admin'
   }
 });
 export const ManagerModel = mongoose.model("manager", managerSchema);
@@ -60,12 +52,11 @@ const maker = MakeModelCtlForm({
 maker.pre('store', async ({ ctx }) => {
 
   const first = await ModelControllers["manager"]?.option?.model.findOne({
-    canCreate: true,
-    canDelete: true,
+    isFirst: true
   });
   if (!first) {
-    ctx.data.canCreate = true;
-    ctx.data.canDelete = true;
+    ctx.__permission = 'admin';
+    ctx.data.isFirst = true;
     return
   };
 
@@ -77,8 +68,6 @@ maker.pre('store', async ({ ctx }) => {
       status: 404,
     }
   }
-  ctx.data.canCreate = false;
-  ctx.data.canDelete = false;
 });
 maker.tools.assigneToNewListElement({
   parentModelPath: 'entreprise',

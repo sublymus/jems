@@ -349,7 +349,7 @@ export const listFactory = (controller: ModelControllerSchema, option: Model_opt
       pagingData.removed = removed;
       
       const promise = pagingData.items.map((item: any) => {
-        return formatModelInstance(ctx, service, option, item);
+        return formatModelInstance(ctx, service, option.modelPath, item);
       });
       await Promise.allSettled(promise);
     } catch (error:any) {

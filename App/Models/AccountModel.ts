@@ -22,57 +22,12 @@ let AccountSchema = SQuery.Schema({
         type: String,
         required: true,
         unique: true,
-        access:'share',
-        share:'carte',
     },
-    /*
-    
-    await instance.rule({
-        'carte':{
-            add:{
-                id:'',
-                modelPath:'user',
-                rule:'a-w-r'
-            }
-            remove:{
-                id:'',
-            }
-        }
-    })
-    await instance.rule({
-        'carte':{
-            add:{
-                id:'',
-                modelPath:'user',
-                rule:'a-w-r'
-            }
-            remove:{
-                id:'',
-            }
-        }
-    })
-    
-    */
     carte: {
         type: String,
         unique: true,
         access:'share',
-        share:{
-            only:['client:user','client:manager'],
-            target:{
-                maxMember:120,
-                addSelf:true,
-                allow:['a','l','w','r','fd'],
-            }
-        },
     },
-    __$carte:[{
-        type :{
-            id:Number,
-            modelPath:String,
-            rule:[String]
-        }
-    }],
     imgProfile: [{
         type: SQuery.FileType,
         file: {
