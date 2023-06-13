@@ -523,6 +523,26 @@ const Transaction: ControllerSchema = {
       };
     }
   },
+  list: async (ctx: ContextSchema): ResponseSchema => {
+    const {filter} = ctx.data;
+    if (ctx.signup.modelPath != "manager") {
+      return {
+        error: "Only manager can create user this service",
+        code: "Only manager can create user this service",
+        message: "Only manager can create user this service",
+        status: 404,
+      };
+    }
+    const listTransaction = await ModelControllers["transaction"]?.option?.model.find(filter);
+
+    return {
+      response: listTransaction,
+      code: "OPERATION_SUCCESS",
+      message: "OPERATION_SUCCESS",
+      status: 200,
+    };
+    
+  },
 };
 
 async function updateTransaction(

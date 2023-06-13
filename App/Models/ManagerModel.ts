@@ -48,6 +48,17 @@ const maker = MakeModelCtlForm({
   model: ManagerModel,
   schema: managerSchema,
 });
+
+maker.pre('store',async({ctx})=>{
+  if( ctx.__permission != 'client:manager'){
+    return {
+      error: 'Only manager can create account for another manager',
+      code:"Manager ACount Not Created",
+      message:'Only manager can create account for another manager',
+      status:404,
+    }
+  }
+});
 maker.tools.assigneToNewListElement({
   parentModelPath: 'entreprise',
   parentListProperty: 'managers',
