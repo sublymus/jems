@@ -102,7 +102,7 @@ export class List extends BaseComponent {
                         console.log('######################################################');
                         this.emit('createList', await data.arrayData)
                     });
-                    await this.arrayInstance.update({
+                    const r = await this.arrayInstance.update({
                         paging: {
                             limit: 3
                         }

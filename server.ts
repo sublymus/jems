@@ -5,9 +5,10 @@ import express from "express";
 import path from "path";
 import Log from "sublymus_logger";
 import { SQuery } from "./lib/squery/SQuery";
+import { azerty } from "./lib/squery/Config";
 
 const PORT = 3001;
-
+azerty
 const app = express();
 const server = app.listen(PORT, () => {
   console.log("Server running at http://localhost:" + PORT);

@@ -112,14 +112,15 @@ const main: MainType = function (socket: Socket) {
     return async (data: DataSchema, cb?: CallBack) => {
       data = data || {};
       Log("squery:data", {data}, { ctrlName }, { service });
-
+     // if(/*ctrlName=='manager' && */service == 'create') throw new Error("je l'ai eu");
+      
       const ctx: ContextSchema = await defineContext(
         socket,
         ctrlName,
         service,
         data
       );
-        Log('Cookie_result',await SQuery.cookies(socket?.request.headers.cookie ,'' , 'token'));
+        Log('Cookie_result',await SQuery.cookies(socket?.request.headers.cookie));
       const midList = [...GlobalMiddlewares];
 
       for (let i = 0; i < midList.length; i++) {

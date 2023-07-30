@@ -33,7 +33,7 @@ let AccountSchema = SQuery.Schema({
         file: {
             size: [1, 1e8],
             length: [0, 4],
-            dir: [Config.conf.rootDir,'fs','fa','fb'],
+            dir: ['fs','fa','fb'],
         }
     }]
 });
@@ -45,3 +45,4 @@ MakeModelCtlForm({
     model: AccountModel,
 });
 export default AccountModel;
+

@@ -50,7 +50,7 @@ const MakeModelCtlForm: (
   const  completModel:CompletModel = options.model as CompletModel;
   const option: Model_optionSchema= {
       ...options,
-      volatile: options.volatile??false,
+      volatile: options.volatile??true,
       modelPath: options.model.modelName,
       model:completModel,
     };
@@ -174,7 +174,7 @@ const MakeModelCtlForm: (
 async function formatModelInstance(
   ctx: ContextSchema,
   service: ModelServiceAvailable,
-  modelPath: string,
+  option: ModelFrom_optionSchema & { modelPath: string },
   modelInstance: ModelInstanceSchema
 ) {
   const info: PopulateSchema = {
@@ -184,7 +184,7 @@ async function formatModelInstance(
   deepPopulate(
     ctx,
     service,
-    modelPath,
+    option.model.modelName,
     info,
     modelInstance.__key._id.toString() == ctx.__key
   );

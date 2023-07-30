@@ -14,7 +14,17 @@ import { parentInfo } from "../ModelCtrlManager";
 import { SQuery } from "../SQuery";
 
 const server: ControllerSchema = {
-  currentUser: async (ctx: ContextSchema): ResponseSchema => {
+  disconnection:async (ctx: ContextSchema): ResponseSchema =>{
+    await SQuery.cookies(ctx.socket, "token" ,{});
+    //ctx.socket?.disconnect(true);
+    return {
+      response: "OPERATION_SUCCESS",
+      status: 404,
+      code: "OPERATION_SUCCESS",
+      message: 'OPERATION_SUCCESS',
+    }
+  },
+  currentClient: async (ctx: ContextSchema): ResponseSchema => {
     const token = await SQuery.cookies(ctx.socket, "token");
     return {
       response: {

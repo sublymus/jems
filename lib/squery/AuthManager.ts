@@ -12,6 +12,8 @@ export class AuthManager {
         error: "OPERATION_FAILED",
         ...(await STATUS.OPERATION_FAILED(ctx)),
       };
+      //loginExtension: [LoginConfirmartion],
+      //signupExtension: [EmailConfirmartion],
     }
     let loginModelInstance = null;
     Log("login", ctx.data);

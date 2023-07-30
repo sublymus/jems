@@ -21,7 +21,7 @@ let MessageSchema = SQuery.Schema({
         length: [0, 4],
         type: ["*/*"],
         size: [1, 4e10],
-        dir: [Config.conf.rootDir, "fs"],
+        dir: ["fs"],
       },
     },
   ],

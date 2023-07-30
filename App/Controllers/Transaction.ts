@@ -286,6 +286,7 @@ const Transaction: ControllerSchema = {
     return await updateTransaction(ctx, "run", "end");
   },
   join: async (ctx: ContextSchema): ResponseSchema => {
+    const {id} = ctx.data;
     try {
       if (ctx.signup.modelPath != "manager") {
         return {
@@ -309,7 +310,7 @@ const Transaction: ControllerSchema = {
       }
       const transaction = await ModelControllers[
         "transaction"
-      ]?.option?.model.__findOne({ _id: ctx.data.id });
+      ]?.option?.model.__findOne({ _id: id });
       Log("transaction", { transaction });
       if (!transaction) {
         return {
@@ -360,7 +361,7 @@ const Transaction: ControllerSchema = {
         __permission: "admin",
         __key: etp.__key.toString(),
         data: {
-          remove: [ctx.data.id],
+          remove: [id],
           paging: {
             query: {
               __parentModel: `entreprise_${etp._id.toString()}_newTransactions_transaction`,
@@ -389,7 +390,7 @@ const Transaction: ControllerSchema = {
       return {
         code: "OPERATION_SUCCESS",
         message: "OPERATION_SUCCESS",
-        response: ctx.data.id,
+        response: id,
         status: 200,
       };
     } catch (error: any) {
@@ -404,6 +405,7 @@ const Transaction: ControllerSchema = {
   end: async (ctx: ContextSchema): ResponseSchema => {
     const lastVal = "run",
       newVal = "end";
+      const {id , managerFile}= ctx.data;
     try {
       if (ctx.signup.modelPath != "manager") {
         return {
@@ -428,7 +430,7 @@ const Transaction: ControllerSchema = {
       const transaction = await ModelControllers[
         "transaction"
       ]?.option?.model.findOne({
-        _id: ctx.data.id,
+        _id: id,
       });
       if (!transaction) {
         return {
@@ -451,9 +453,9 @@ const Transaction: ControllerSchema = {
         __permission: "admin",
         service: "update",
         data: {
-          id: ctx.data.id,
+          id: id,
           status: newVal,
-          managerFile: ctx.data.managerFile,
+          managerFile: managerFile,
         },
       });
       return res;
@@ -467,11 +469,12 @@ const Transaction: ControllerSchema = {
     }
   },
   addDiscussion: async (ctx: ContextSchema): ResponseSchema => {
+    const {id , managerFile} = ctx.data;
     try {
       const transaction = await ModelControllers[
         "transaction"
       ]?.option?.model.findOne({
-        _id: ctx.data.id,
+        _id: id,
       });
       if (!transaction) {
         return {
@@ -504,13 +507,13 @@ const Transaction: ControllerSchema = {
         __permission: "admin",
         __key: transaction.__key.toString(),
         data: {
-          id: ctx.data.id,
+          id: id,
           discussion: {
             client: transaction.senderAccount.toString(),
             manager: transaction.manager?.toString(),
             closed: false,
           },
-          managerFile: ctx.data.managerFile,
+          managerFile: managerFile,
         },
       });
       Log("res", res?.response);
@@ -540,7 +543,11 @@ const Transaction: ControllerSchema = {
     const listTransaction : Array <any>= await ModelControllers["transaction"]?.option?.model.find(filter);
 
     for (const instance of listTransaction) {
-      await  formatModelInstance(ctx,'read','transaction',instance);
+      await  formatModelInstance(ctx,'read',{
+        model:ModelControllers["transaction"]?.option?.model,
+        modelPath:'transaction',
+        schema:ModelControllers["transaction"]?.option?.schema
+      },instance);
     }
 
     return {
